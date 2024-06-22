@@ -8,38 +8,40 @@ import (
 )
 
 func main() {
-	args := os.Args
+	args := os.Args // Get command-line arguments
 	if len(args) == 2 {
-		ascii(args)
+		ascii(args) // Call ascii function for simple usage
 	} else if len(args) == 3 {
-		ascii_fs(args)
+		ascii_fs(args) // Call ascii_fs function for file system output
 	} else if len(args) == 4 {
-		ascii_output(args)
+		ascii_output(args) // Call ascii_output function for output to a specified file
 	} else {
-		fmt.Println("Usage: go run . [STRING] [BANNER]\nEX: go run . something standar")
+		fmt.Println("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
 	}
 }
 
 func ascii(args []string) {
 	txt := args[1]
 
-	textSlice := strings.Split(txt, "\\n")
+	textSlice := strings.Split(txt, "\\n") // Split text by "\n" for multiline support
 
 	if !charValidation(txt) {
 		fmt.Println("Error : invalid char")
 		os.Exit(1)
 	}
-	file, err := os.ReadFile("standard.txt")
+
+	file, err := os.ReadFile("standard.txt") // Read banner font file
 	if err != nil {
 		fmt.Println("Error : reading file")
 		os.Exit(1)
 	}
-	slice := strings.Split(string(file), "\n")
+	slice := strings.Split(string(file), "\n") // Split font file into lines
+
 	for j, txt := range textSlice {
 		if txt != "" {
-			for i := 0; i < 8; i++ {
+			for i := 0; i < 8; i++ { // Each letter is 8 lines high
 				for _, v := range txt {
-					firstLine := int(v-32)*9 + 1 + i
+					firstLine := int(v-32)*9 + 1 + i // Determine the starting line for each character
 					fmt.Print(slice[firstLine])
 				}
 				fmt.Println()
@@ -52,10 +54,10 @@ func ascii(args []string) {
 
 func ascii_output(args []string) {
 	txt := args[2]
-
 	format := args[3]
 	str := ""
-	outputPtr := flag.String("output", "", "Output file name")
+
+	outputPtr := flag.String("output", "", "Output file name") // Define output file flag
 	flag.Parse()
 
 	if *outputPtr == "" {
@@ -69,12 +71,14 @@ func ascii_output(args []string) {
 		fmt.Println("Error : invalid char")
 		os.Exit(1)
 	}
-	file, err := os.ReadFile(format + ".txt")
+
+	file, err := os.ReadFile(format + ".txt") // Read banner font file based on format
 	if err != nil {
 		fmt.Println("Error : reading file")
 		os.Exit(1)
 	}
-	slice := strings.Split(string(file), "\n")
+	slice := strings.Split(string(file), "\n") // Split font file into lines
+
 	for j, txt := range textSlice {
 		if txt != "" {
 			for i := 0; i < 8; i++ {
@@ -88,7 +92,7 @@ func ascii_output(args []string) {
 			str += "\n"
 		}
 	}
-	os.WriteFile(*outputPtr, []byte(str), 0o644)
+	os.WriteFile(*outputPtr, []byte(str), 0o644) // Write output to specified file
 }
 
 func ascii_fs(args []string) {
@@ -100,12 +104,14 @@ func ascii_fs(args []string) {
 		fmt.Println("Error : invalid char")
 		os.Exit(1)
 	}
-	file, err := os.ReadFile(format + ".txt")
+
+	file, err := os.ReadFile(format + ".txt") // Read banner font file based on format
 	if err != nil {
 		fmt.Println("Error : reading file")
 		os.Exit(1)
 	}
-	slice := strings.Split(string(file), "\n")
+	slice := strings.Split(string(file), "\n") // Split font file into lines
+
 	for j, txt := range textSlice {
 		if txt != "" {
 			for i := 0; i < 8; i++ {
@@ -124,7 +130,7 @@ func ascii_fs(args []string) {
 func charValidation(str string) bool {
 	slice := []rune(str)
 	for _, char := range slice {
-		if char < 32 || char > 126 {
+		if char < 32 || char > 126 { // Validate characters to ensure they are within printable ASCII range
 			return false
 		}
 	}
